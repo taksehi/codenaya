@@ -32,7 +32,7 @@ const font = Poppins({
 });
 
 export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
-  const project = useProject(projectId);
+	const project = useProject(projectId);
 	const renameProject = useRenameProject(projectId);
 	const [isRenaming, setIsRenaming] = useState(false);
 	const [name, setName] = useState("");
@@ -97,9 +97,7 @@ export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
 									type="text"
 									onChange={(e) => setName(e.target.value)}
 									onFocus={(e) => e.currentTarget.select()}
-									onBlur={() => {
-										handleSubmit();
-									}}
+									onBlur={() => setIsRenaming(false)}
 									onKeyDown={(e) => {
 										handleKeyDown(e);
 									}}
