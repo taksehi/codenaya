@@ -32,6 +32,7 @@ const font = Poppins({
 });
 
 export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
+  const project = useProject(projectId);
 	const renameProject = useRenameProject(projectId);
 	const [isRenaming, setIsRenaming] = useState(false);
 	const [name, setName] = useState("");
@@ -60,7 +61,6 @@ export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
 		}
 	};
 
-	const project = useProject(projectId);
 	return (
 		<nav className="flex justify-between items-center gap-x-2 p-2 bg-sidebar border-b">
 			<div className="flex items-center gap-x-2">
