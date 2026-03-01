@@ -19,8 +19,8 @@ import { ProjectCommandDialog } from "./projects-command-dialog";
 import Image from "next/image";
 
 const font = Poppins({
-	subsets: ["latin"],
-	weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const ProjectsView = () => {
