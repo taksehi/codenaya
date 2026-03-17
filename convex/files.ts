@@ -293,7 +293,18 @@ export const deleteFile = mutation({
 			await ctx.db.delete("files", fileId);
 		};
 		await deleteRecursive(args.id);
-		updateUpdatedAt(ctx, file);
+
+		// Update parent and project timestamps directly since the current file is deleted
+		const now = Date.now();
+		if (file.parentId) {
+			await ctx.db.patch(file.parentId, {
+				updatedAt: now,
+			});
+		}
+
+		await ctx.db.patch("projects", file.projectId, {
+			updatedAt: now,
+		});
 	},
 });
 
