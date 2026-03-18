@@ -1,6 +1,6 @@
 import { query, mutation, MutationCtx, QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
-import { verifyAuth } from "@convex/auth";
+import { verifyAuth } from "./auth"
 import { Doc, Id } from "./_generated/dataModel";
 
 async function assertValidParent(
