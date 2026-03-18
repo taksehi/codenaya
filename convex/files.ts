@@ -1,7 +1,19 @@
-import { query, mutation, MutationCtx } from "./_generated/server";
+import { query, mutation, MutationCtx, QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { verifyAuth } from "@convex/auth";
 import { Doc, Id } from "./_generated/dataModel";
+
+async function assertValidParent(
+	ctx: MutationCtx | QueryCtx,
+	projectId: Id<"projects">,
+	parentId?: Id<"files">,
+) {
+	if (!parentId) return;
+	const parent = await ctx.db.get("files", parentId);
+	if (!parent || parent.projectId !== projectId || parent.type !== "folder") {
+		throw new Error("Invalid parent folder");
+	}
+}
 
 export const getFiles = query({
 	args: { projectId: v.id("projects") },
@@ -62,6 +74,8 @@ export const getFolderContent = query({
 			throw new Error("Unauthorized access to this project");
 		}
 
+		await assertValidParent(ctx, args.projectId, args.parentId);
+
 		const files = await ctx.db
 			.query("files")
 			.withIndex("by_project_parent", (q) =>
@@ -99,6 +113,8 @@ export const createFile = mutation({
 		if (project.ownerId !== identity.subject) {
 			throw new Error("Unauthorized access to this project");
 		}
+
+		await assertValidParent(ctx, args.projectId, args.parentId);
 
 		const files = await ctx.db
 			.query("files")
@@ -147,6 +163,8 @@ export const createFolder = mutation({
 		if (project.ownerId !== identity.subject) {
 			throw new Error("Unauthorized access to this project");
 		}
+
+		await assertValidParent(ctx, args.projectId, args.parentId);
 
 		const files = await ctx.db
 			.query("files")
@@ -228,7 +246,7 @@ export const renameFile = mutation({
 		});
 
 		if (file.parentId) {
-			await ctx.db.patch(file.parentId, { updatedAt: now });
+			await ctx.db.patch("files", file.parentId, { updatedAt: now });
 		}
 
 		await ctx.db.patch("projects", file.projectId, { updatedAt: now });
@@ -285,7 +303,7 @@ export const deleteFile = mutation({
 		// Update parent and project timestamps directly since the current file is deleted
 		const now = Date.now();
 		if (file.parentId) {
-			await ctx.db.patch(file.parentId, {
+			await ctx.db.patch("files", file.parentId, {
 				updatedAt: now,
 			});
 		}
@@ -319,6 +337,10 @@ export const updateFile = mutation({
 			throw new Error("Unauthorized access to this project");
 		}
 
+		if (file.type !== "file") {
+			throw new Error("Cannot update content of a folder");
+		}
+
 		// Update the file's content and timestamps
 		const now = Date.now();
 
@@ -328,7 +350,7 @@ export const updateFile = mutation({
 		});
 
 		if (file.parentId) {
-			await ctx.db.patch(file.parentId, { updatedAt: now });
+			await ctx.db.patch("files", file.parentId, { updatedAt: now });
 		}
 
 		await ctx.db.patch("projects", file.projectId, { updatedAt: now });

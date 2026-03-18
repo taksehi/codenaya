@@ -37,6 +37,8 @@ export const TreeItemWrapper = (
           onDoubleClick={onDoubleClick}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
+              e.preventDefault()
+              e.stopPropagation()
               onRename?.()
             }
           }}
