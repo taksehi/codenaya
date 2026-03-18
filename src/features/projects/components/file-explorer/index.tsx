@@ -32,22 +32,45 @@ export const FileExplorer = ({ projectId }: { projectId: Id<"projects"> }) => {
 
 	const createFile = useCreateFile();
 	const createFolder = useCreateFolder();
-	const handleCreate = (name: string) => {
-		setCreating(null);
+	// const handleCreate = (name: string) => {
+	// 	setCreating(null);
 
-		if (creating === "file") {
-			createFile({
-				projectId,
-				parentId: undefined,
-				name,
-				content: "",
-			});
-		} else {
-			createFolder({
-				projectId,
-				parentId: undefined,
-				name,
-			});
+	// 	if (creating === "file") {
+	// 		createFile({
+	// 			projectId,
+	// 			parentId: undefined,
+	// 			name,
+	// 			content: "",
+	// 		});
+	// 	} else {
+	// 		createFolder({
+	// 			projectId,
+	// 			parentId: undefined,
+	// 			name,
+	// 		});
+	// 	}
+	// };
+	const handleCreate = async (name: string) => {
+		if (!creating) return;
+		const mode = creating;
+		try {
+			if (mode === "file") {
+				await createFile({
+					projectId,
+					parentId: undefined,
+					name,
+					content: "",
+				});
+			} else if (mode === "folder") {
+				await createFolder({
+					projectId,
+					parentId: undefined,
+					name,
+				});
+			}
+			setCreating(null);
+		} catch {
+			// TODO: surface toast/error state
 		}
 	};
 
@@ -76,7 +99,9 @@ export const FileExplorer = ({ projectId }: { projectId: Id<"projects"> }) => {
 								setCreating("file");
 							}}
 							variant="highlight"
-							size="xs">
+							size="xs"
+							aria-label="New file"
+						>
 							<FilePlusCornerIcon className="size-3.5" />
 						</Button>
 						<Button
@@ -87,7 +112,9 @@ export const FileExplorer = ({ projectId }: { projectId: Id<"projects"> }) => {
 								setCreating("folder");
 							}}
 							variant="highlight"
-							size="xs">
+							size="xs"
+							aria-label="New folder"
+						>
 							<FolderPlusIcon className="size-3.5" />
 						</Button>
 						<Button
@@ -96,10 +123,11 @@ export const FileExplorer = ({ projectId }: { projectId: Id<"projects"> }) => {
 								e.preventDefault();
 								setIsOpen(true);
 								setCollapseKey((prev) => prev + 1);
-								setIsOpen(false);
 							}}
 							variant="highlight"
-							size="xs">
+							size="xs"
+							aria-label="Collapse"
+						>
 							<CopyMinusIcon className="size-3.5" />
 						</Button>
 					</div>

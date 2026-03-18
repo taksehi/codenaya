@@ -82,9 +82,9 @@ export const TreeItemWrapper = (
           onClick={onDelete}
           className="text-sm"
         >
-          Delete Permanantly
+          Delete Permanently
           <ContextMenuShortcut>
-            cmd + backspace
+            ⌘ + ⌫
           </ContextMenuShortcut>
         </ContextMenuItem>
       </ContextMenuContent>

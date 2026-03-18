@@ -3,24 +3,6 @@ import { v } from "convex/values";
 import { verifyAuth } from "@convex/auth";
 import { Doc, Id } from "./_generated/dataModel";
 
-const updateUpdatedAt = async (ctx: MutationCtx, file: Doc<"files">) => {
-	const now = Date.now();
-
-	await ctx.db.patch(file._id, {
-		updatedAt: now,
-	});
-
-	if (file.parentId) {
-		await ctx.db.patch(file.parentId, {
-			updatedAt: now,
-		});
-	}
-
-	await ctx.db.patch("projects", file.projectId, {
-		updatedAt: now,
-	});
-};
-
 export const getFiles = query({
 	args: { projectId: v.id("projects") },
 	handler: async (ctx, args) => {
@@ -126,7 +108,7 @@ export const createFile = mutation({
 			.collect();
 
 		const existingFile = files.find(
-			(file) => file.name === args.name && file.type === "folder",
+			(file) => file.name === args.name && file.type === "file",
 		);
 		if (existingFile) {
 			throw new Error("File already exists");
@@ -237,13 +219,19 @@ export const renameFile = mutation({
 			throw new Error(`A ${file.type} named "${args.newName}" already exists`);
 		}
 
-		// update the file's name
+		// Update the file's name and timestamps
+		const now = Date.now();
+
 		await ctx.db.patch("files", args.id, {
 			name: args.newName,
-			updatedAt: Date.now(),
+			updatedAt: now,
 		});
 
-		updateUpdatedAt(ctx, file);
+		if (file.parentId) {
+			await ctx.db.patch(file.parentId, { updatedAt: now });
+		}
+
+		await ctx.db.patch("projects", file.projectId, { updatedAt: now });
 	},
 });
 
@@ -286,9 +274,9 @@ export const deleteFile = mutation({
 				for (const child of children) {
 					await deleteRecursive(child._id);
 				}
-				if (item.storageId) {
-					await ctx.storage.delete(item.storageId);
-				}
+			}
+			if (item.storageId) {
+				await ctx.storage.delete(item.storageId);
 			}
 			await ctx.db.delete("files", fileId);
 		};
@@ -331,7 +319,18 @@ export const updateFile = mutation({
 			throw new Error("Unauthorized access to this project");
 		}
 
-		// update the parent folder's updated at
-		updateUpdatedAt(ctx, file);
+		// Update the file's content and timestamps
+		const now = Date.now();
+
+		await ctx.db.patch("files", args.id, {
+			content: args.content,
+			updatedAt: now,
+		});
+
+		if (file.parentId) {
+			await ctx.db.patch(file.parentId, { updatedAt: now });
+		}
+
+		await ctx.db.patch("projects", file.projectId, { updatedAt: now });
 	},
 });
