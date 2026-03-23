@@ -1,6 +1,5 @@
 import { useRouter } from "next/navigation";
-import { FaGithub } from "react-icons/fa";
-import { AlertCircleIcon, GlobeIcon, Loader2Icon } from "lucide-react";
+import { AlertCircleIcon, GlobeIcon, Loader2Icon, GithubIcon } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -20,7 +19,7 @@ interface ProjectCommandDialogProps {
 const getProjectIcon = ( {project} : {project: Doc<"projects">}) => {
   if (project.importStatus === "completed") {
     return (
-      <FaGithub className="size-3.5 text-muted-foreground" />
+      <GithubIcon className="size-3.5 text-muted-foreground" />
     )
   }
   if (project.importStatus === "failed") {

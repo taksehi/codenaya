@@ -3,9 +3,8 @@
 import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { SparkleIcon } from "lucide-react";
+import { SparkleIcon, GithubIcon } from "lucide-react";
 import { Kbd } from "@/components/ui/kbd";
-import { FaGithub } from "react-icons/fa";
 import { ProjectsList } from "@/features/projects/components/projects-list";
 import { useCreateProject } from "@/features/projects/hooks/use-projects";
 import {
@@ -93,7 +92,7 @@ export const ProjectsView = () => {
                 variant="outline"
                 className="h-full items-start justify-start p-4 bg-background border flex flex-col rounded-none gap-6">
                 <div className="flex justify-between w-full items-center">
-                  <FaGithub className="size-4" />
+                  <GithubIcon className="size-4" />
                   <Kbd className="bg-accent border">⌘I</Kbd>
                 </div>
                 <div>

@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Id } from "@convex/_generated/dataModel";
 import { useState } from "react";
-import { FaGithub } from "react-icons/fa";
+import { GithubIcon } from "lucide-react";
 import { Allotment } from "allotment";
 import { FileExplorer } from "./file-explorer";
 
@@ -53,7 +53,7 @@ export const ProjectIdView = ({ projectId }: { projectId: Id<"projects"> }) => {
         <div className="flex-1 flex justify-end h-full">
           <div className="flex items-center gap-1.5 h-full px-3 cursor-pointer 
           text-muted-foreground border-l hover:bg-accent/30">
-            <FaGithub className="size-3.5" />
+            <GithubIcon className="size-3.5" />
             <span className="text-sm">Export</span>
           </div>
         </div>

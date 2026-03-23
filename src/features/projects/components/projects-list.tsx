@@ -2,10 +2,9 @@ import { Kbd } from "@/components/ui/kbd"
 import { Spinner } from "@/components/ui/spinner"
 import { useProjectsPartial } from "@/features/projects/hooks/use-projects"
 import { Doc } from "@convex/_generated/dataModel"
-import { AlertCircleIcon,ArrowRightIcon, GlobeIcon, Loader2Icon } from "lucide-react"
+import { AlertCircleIcon,ArrowRightIcon, GlobeIcon, Loader2Icon, GithubIcon } from "lucide-react"
 import Link from "next/link"
 import { formatDistanceToNow } from "date-fns"
-import { FaGithub } from "react-icons/fa"
 import { Button } from "@/components/ui/button"
 
 const formatTimeStamp = ( timestamp: number ) => {
@@ -15,7 +14,7 @@ const formatTimeStamp = ( timestamp: number ) => {
 const getProjectIcon = ( {project} : {project: Doc<"projects">}) => {
   if (project.importStatus === "completed") {
     return (
-      <FaGithub className="size-4 text-muted-foreground" />
+      <GithubIcon className="size-4 text-muted-foreground" />
     )
   }
   if (project.importStatus === "failed") {
