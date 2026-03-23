@@ -15,21 +15,21 @@ const formatTimeStamp = ( timestamp: number ) => {
 const getProjectIcon = ( {project} : {project: Doc<"projects">}) => {
   if (project.importStatus === "completed") {
     return (
-      <FaGithub className="size-4 text-muted-foreground" />
+      <FaGithub className="size-4" />
     )
   }
   if (project.importStatus === "failed") {
     return (
-      <AlertCircleIcon className="size-4 text-muted-foreground" />
+      <AlertCircleIcon className="size-4" />
     )
   }
   if (project.importStatus === "importing") {
     return (
-      <Loader2Icon className="size-4 text-muted-foreground animate-spin" />
+      <Loader2Icon className="size-4 animate-spin" />
     )
   }
 
-  return <GlobeIcon className="size-4 text-muted-foreground" />
+  return <GlobeIcon className="size-4" />
 }
 
 interface projectListProps {
@@ -41,25 +41,27 @@ const ContinueCard = ({ data } : {
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-xs text-muted-foreground">
+      <span className="text-xs text-zinc-500 font-semibold tracking-wide uppercase ml-1">
         Last updated
       </span>
       <Button
         variant={"outline"}
         asChild
-        className="h-auto items-start justify-start p-4 bg-background border rounded-none flex flex-col gap-2"
+        className="h-auto items-start justify-start p-4 bg-white/5 backdrop-blur-md hover:bg-white/10 border-white/10 rounded-xl flex flex-col gap-2 transition-all duration-300 shadow-sm group/card"
       >
-        <Link href={`/projects/${data._id}`} className="group" >
-          <div className="flex items-center justify-between">
+        <Link href={`/projects/${data._id}`} className="group w-full" >
+          <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
-              {getProjectIcon({project: data})}
-              <span className="font-medium truncate">
+              <div className="text-zinc-400 group-hover/card:text-white transition-colors">
+                {getProjectIcon({project: data})}
+              </div>
+              <span className="font-semibold text-zinc-200 group-hover/card:text-white truncate text-base transition-colors">
                 {data.name}
               </span>
-              <ArrowRightIcon className="size-4 text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
             </div>
+            <ArrowRightIcon className="size-4 text-zinc-500 group-hover/card:text-white group-hover/card:translate-x-1 transition-all" />
           </div>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-zinc-500 group-hover/card:text-zinc-400 transition-colors">
             {formatTimeStamp(data.updatedAt)}
           </span>
         </Link>
@@ -72,14 +74,16 @@ const ProjectItem = ({ data } : {
   data: Doc<"projects">
 }) => {
   return (
-    <Link href={`/projects/${data._id}`} className="text-sm text-foreground/60 font-medium hover:text-foreground py-1 flex items-center justify-between w-full group">
+    <Link href={`/projects/${data._id}`} className="text-sm text-zinc-400 font-medium hover:text-white py-2 px-2 rounded-lg hover:bg-white/5 flex items-center justify-between w-full group transition-all">
       <div className="flex items-center gap-2">
-        {getProjectIcon({project: data})}
+        <div className="text-zinc-500 group-hover:text-zinc-300 transition-colors">
+          {getProjectIcon({project: data})}
+        </div>
         <span className="truncate">
           {data.name}
         </span>
       </div>
-      <span className="text-xs text-muted-foreground group-hover:text-foreground/60 transition-colors">
+      <span className="text-xs text-zinc-600 group-hover:text-zinc-400 transition-colors">
         {formatTimeStamp(data.updatedAt)}
       </span>
     </Link>
@@ -101,16 +105,16 @@ export const ProjectsList = ({ onViewAll }: projectListProps) => {
       {mostRecent ? <ContinueCard data={mostRecent} /> : null}
       {rest.length > 0 && (
         <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-xs text-muted-foreground">
+          <div className="flex items-center justify-between gap-2 px-1">
+            <span className="text-xs text-zinc-500 font-semibold tracking-wide uppercase">
               Recent Projects
             </span>
             <button 
-              className="flex items-center gap-2 text-muted-foreground text-xs hover:text-foreground transition-colors"
+              className="flex items-center gap-2 text-zinc-500 text-xs hover:text-white transition-colors"
               onClick={onViewAll}
             >
               <span>View all</span>
-              <Kbd className="bg-accent border">⌘K</Kbd>
+              <Kbd className="bg-[#09090B] border-white/10 text-zinc-400 font-mono text-[10px]">⌘K</Kbd>
             </button>
           </div>
           <ul>

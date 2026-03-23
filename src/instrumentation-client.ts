@@ -5,6 +5,7 @@
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
+  enabled: false,
 	dsn: "https://e0af84b7bc6c34dae87a8731cc9cec01@o4509388221251584.ingest.de.sentry.io/4510893932281936",
 
 	// Tunnel requests through Next.js to bypass ad-blockers

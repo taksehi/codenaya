@@ -32,3 +32,14 @@ export const useFolderContents = ({
     enabled ? { projectId, parentId } : "skip"
   )
 }
+
+export const useFile = (fileId?: Id<"files">) => {
+  return useQuery(
+    api.files.getFile,
+    fileId ? { id: fileId } : "skip"
+  )
+}
+
+export const useProjectFiles = (projectId: Id<"projects">) => {
+  return useQuery(api.files.getFiles, { projectId });
+}

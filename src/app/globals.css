@@ -45,38 +45,38 @@
 
 :root {
 	--radius: 0.475rem;
-	--background: oklch(0.2925 0.0157 264.3);
-	--foreground: oklch(0.145 0 0);
-	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.145 0 0);
-	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.145 0 0);
-	--primary: oklch(0.205 0 0);
-	--primary-foreground: oklch(0.985 0 0);
-	--secondary: oklch(0.97 0 0);
-	--secondary-foreground: oklch(0.205 0 0);
-	--muted: oklch(0.25 0.012 264.34);
-	--muted-foreground: oklch(0.556 0 0);
-	--accent: oklch(0.3404 0.0205 265.97);
-	--accent-foreground: oklch(0.205 0 0);
-	--destructive: oklch(0.577 0.245 27.325);
-	--border: oklch(0.922 0 0);
-	--separator-border: oklch(1 0 0 / 10%);
-	--input: oklch(0.922 0 0);
-	--ring: oklch(0.6562 0.1826 262.74);
-	--chart-1: oklch(0.646 0.222 41.116);
-	--chart-2: oklch(0.6 0.118 184.704);
-	--chart-3: oklch(0.398 0.07 227.392);
-	--chart-4: oklch(0.828 0.189 84.429);
-	--chart-5: oklch(0.769 0.188 70.08);
-	--sidebar: oklch(0.25 0.012 264.34);
-	--sidebar-foreground: oklch(0.145 0 0);
-	--sidebar-primary: oklch(0.205 0 0);
-	--sidebar-primary-foreground: oklch(0.985 0 0);
-	--sidebar-accent: oklch(0.97 0 0);
-	--sidebar-accent-foreground: oklch(0.205 0 0);
-	--sidebar-border: oklch(0.922 0 0);
-	--sidebar-ring: oklch(0.708 0 0);
+	--background: #091413;
+	--foreground: #B0E4CC;
+	--card: #285A48;
+	--card-foreground: #B0E4CC;
+	--popover: #285A48;
+	--popover-foreground: #B0E4CC;
+	--primary: #408A71;
+	--primary-foreground: #091413;
+	--secondary: #285A48;
+	--secondary-foreground: #B0E4CC;
+	--muted: #285A48;
+	--muted-foreground: #7BBFA6;
+	--accent: #408A71;
+	--accent-foreground: #091413;
+	--destructive: #E74C3C;
+	--border: #1A3D30;
+	--separator-border: #1A3D30;
+	--input: #1A3D30;
+	--ring: #408A71;
+	--chart-1: #408A71;
+	--chart-2: #347260;
+	--chart-3: #5BA88D;
+	--chart-4: #285A48;
+	--chart-5: #B0E4CC;
+	--sidebar: #091413;
+	--sidebar-foreground: #B0E4CC;
+	--sidebar-primary: #408A71;
+	--sidebar-primary-foreground: #B0E4CC;
+	--sidebar-accent: #285A48;
+	--sidebar-accent-foreground: #B0E4CC;
+	--sidebar-border: #1A3D30;
+	--sidebar-ring: #408A71;
 }
 
 .dark {
@@ -118,12 +118,14 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}
 }
 
 @layer base {
+
 	button:not([disabled]),
 	[role="button"]:not([disabled]) {
 		cursor: pointer;
@@ -131,16 +133,17 @@
 }
 
 @theme inline {
-	--animate-cell-ripple: cell-ripple var(--duration, 200ms) ease-out none 1
-		var(--delay, 0ms);
+	--animate-cell-ripple: cell-ripple var(--duration, 200ms) ease-out none 1 var(--delay, 0ms);
 
 	@keyframes cell-ripple {
 		0% {
 			opacity: 0.4;
 		}
+
 		50% {
 			opacity: 0.8;
 		}
+
 		100% {
 			opacity: 0.4;
 		}

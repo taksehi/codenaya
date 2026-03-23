@@ -3,12 +3,12 @@ import { Id } from "@convex/_generated/dataModel";
 
 export default async function projectIdPage(
   {params}: {
-    params: Promise<{projectId: Id<"projects">}>
+    params: Promise<{projectId: string}>
   }
 ) {
 
   const { projectId } = await params;
   return (
-    <ProjectIdView projectId={projectId} />
+    <ProjectIdView projectId={projectId as Id<"projects">} />
   )
 }

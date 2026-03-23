@@ -14,12 +14,18 @@ import { CreateInput } from "./create-input";
 import {
 	useCreateFile,
 	useCreateFolder,
-  useFolderContents,
+	useFolderContents,
 } from "../../hooks/use-files";
 import { LoadingRow } from "./loading-row";
 import { Tree } from "./tree";
 
-export const FileExplorer = ({ projectId }: { projectId: Id<"projects"> }) => {
+export const FileExplorer = ({
+	projectId,
+	onFileOpen
+}: {
+	projectId: Id<"projects">;
+	onFileOpen?: (fileId: Id<"files">, fileName: string) => void;
+}) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [collapseKey, setCollapseKey] = useState(0);
 	const [creating, setCreating] = useState<"file" | "folder" | null>(null);
@@ -75,15 +81,15 @@ export const FileExplorer = ({ projectId }: { projectId: Id<"projects"> }) => {
 	};
 
 	return (
-		<div className="h-full bg-sidebar">
+		<div className="h-full bg-white/5 backdrop-blur-md border-r border-white/10">
 			<ScrollArea>
 				<div
 					role="button"
 					onClick={() => setIsOpen((value) => !value)}
-					className="group/project cursor-pointer w-full text-left flex items-center gap-0.5 h-5.5 bg-accent font-bold">
+					className="group/project cursor-pointer w-full text-left flex items-center gap-0.5 h-7 bg-white/5 border-b border-white/10 font-bold px-1 text-zinc-300">
 					<ChevronRightIcon
 						className={cn(
-							"size-4 shrink-0 text-muted-foreground transition-transform",
+							"size-4 shrink-0 text-zinc-500 transition-transform",
 							isOpen && "rotate-90",
 						)}
 					/>
@@ -134,7 +140,7 @@ export const FileExplorer = ({ projectId }: { projectId: Id<"projects"> }) => {
 				</div>
 				{isOpen && (
 					<>
-            {rootFiles === undefined && <LoadingRow level={0} />}
+						{rootFiles === undefined && <LoadingRow level={0} />}
 						{creating && (
 							<CreateInput
 								type={creating}
@@ -143,14 +149,15 @@ export const FileExplorer = ({ projectId }: { projectId: Id<"projects"> }) => {
 								onCancel={() => setCreating(null)}
 							/>
 						)}
-            {rootFiles?.map((item) => (
-              <Tree 
-                key={`${item._id}-${collapseKey}`}
-                item={item}
-                level={0}
-                projectId={projectId}
-              />
-            ))}
+						{rootFiles?.map((item) => (
+							<Tree
+								key={`${item._id}-${collapseKey}`}
+								item={item}
+								level={0}
+								projectId={projectId}
+								onFileOpen={onFileOpen}
+							/>
+						))}
 					</>
 				)}
 			</ScrollArea>

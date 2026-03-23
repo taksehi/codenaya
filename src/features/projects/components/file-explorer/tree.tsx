@@ -14,11 +14,13 @@ export const Tree = (
   {
     item,
     level = 0,
-    projectId
+    projectId,
+    onFileOpen
   }:{
     item: Doc<"files">
     level?: number
     projectId: Id<"projects">
+    onFileOpen?: (fileId: Id<"files">, fileName: string) => void
   }
 ) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -90,7 +92,7 @@ export const Tree = (
         level={level}
         isActive={false}
         onClick={() => {}}
-        onDoubleClick={() => {}}
+        onDoubleClick={() => onFileOpen?.(item._id, fileName)}
         onRename={() => setIsRenaming(true)}
         onDelete={() => {
           // close tab
@@ -109,8 +111,8 @@ export const Tree = (
       <div className="flex items-center gap-0.5">
         <ChevronRightIcon 
           className={cn(
-            "size-4 shrink-0 transition-transform",
-            isOpen && "rotate-90"
+            "size-4 shrink-0 transition-transform text-white/40 group-hover:text-white/80",
+            isOpen && "rotate-90 text-white/80"
           )}
         />
         <FolderIcon folderName={folderName} className="size-4" />
@@ -124,7 +126,7 @@ export const Tree = (
       <>
         <button 
           onClick={() => setIsOpen((value) => !value)}
-          className="group flex items-center gap-1 h-5.5 hover:bg-accent/30 cursor-pointer w-full"
+          className="group flex items-center gap-1 h-7 text-zinc-400 hover:text-white hover:bg-white/5 cursor-pointer w-full transition-colors duration-150"
           style={{
             paddingLeft: getItemPadding(level, false)
           }}
@@ -146,6 +148,7 @@ export const Tree = (
                 item={subItem}
                 level={level + 1}
                 projectId={projectId}
+                onFileOpen={onFileOpen}
               />
             ))}
           </>
@@ -173,6 +176,7 @@ export const Tree = (
                 item={subItem}
                 level={level + 1}
                 projectId={projectId}
+                onFileOpen={onFileOpen}
               />
             ))}
           </>
@@ -187,6 +191,7 @@ export const Tree = (
         <TreeItemWrapper
           item={item}
           level={level}
+          isActive={false}
           onClick={() => setIsOpen((value) => !value)}
           // onDoubleClick={() => {}}
           onRename={() => setIsRenaming(true)}
@@ -210,6 +215,7 @@ export const Tree = (
                 item={subitem}
                 level={level+1}
                 projectId={projectId}
+                onFileOpen={onFileOpen}
               />
             ))}
           </>

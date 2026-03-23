@@ -33,7 +33,7 @@ const font = Poppins({
 
 export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
 	const project = useProject(projectId);
-	const renameProject = useRenameProject(projectId);
+	const renameProject = useRenameProject();
 	const [isRenaming, setIsRenaming] = useState(false);
 	const [name, setName] = useState("");
 	const handleStartRename = () => {
@@ -62,7 +62,7 @@ export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
 	};
 
 	return (
-		<nav className="flex justify-between items-center gap-x-2 p-2 bg-sidebar border-b">
+		<nav className="flex justify-between items-center gap-x-2 p-3 bg-white/5 backdrop-blur-md border-b border-white/10 shadow-sm z-50">
 			<div className="flex items-center gap-x-2">
 				<Breadcrumb>
 					<BreadcrumbList>
@@ -81,7 +81,7 @@ export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
 											width={20}
 											height={20}
 										/>
-										<span className={cn("text-sm font-medium", font.className)}>
+										<span className={cn("text-sm font-semibold tracking-tight text-white/90 drop-shadow-sm", font.className)}>
 											CodeNaya
 										</span>
 									</Link>
@@ -101,13 +101,13 @@ export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
 									onKeyDown={(e) => {
 										handleKeyDown(e);
 									}}
-									className="text-sm bg-transparent text-foreground outline-none
-                  focus:ring-1 focus:ring-inset focus:ring-ring font-medium max-w-40 truncate"
+									className="text-sm bg-transparent text-white outline-none
+                  focus:ring-1 focus:ring-inset focus:ring-indigo-500 font-medium max-w-40 truncate px-1 rounded-sm"
 								/>
 							) : (
 								<BreadcrumbPage
 									onClick={handleStartRename}
-									className="text-sm cursor-pointer hover:text-primary font-medium max-w-40 truncate">
+									className="text-sm cursor-pointer hover:text-white text-zinc-300 transition-colors font-medium max-w-40 truncate px-1 rounded-sm">
 									{project?.name || "loading..."}
 								</BreadcrumbPage>
 							)}
@@ -117,7 +117,7 @@ export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
 				{project?.importStatus == "importing" ? (
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<LoaderIcon className="size-4 text-muted-foreground animate-spin" />
+							<LoaderIcon className="size-4 text-indigo-400 animate-spin" />
 						</TooltipTrigger>
 						<TooltipContent>
 							<p>Importing...</p>
@@ -126,7 +126,7 @@ export const Navbar = ({ projectId }: { projectId: Id<"projects"> }) => {
 				) : (
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<CloudCheckIcon className="size-4 text-muted-foreground" />
+							<CloudCheckIcon className="size-4 text-zinc-500 hover:text-white transition-colors cursor-pointer" />
 						</TooltipTrigger>
 						<TooltipContent>
 							Saved{" "}
