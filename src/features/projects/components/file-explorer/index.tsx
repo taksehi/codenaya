@@ -1,9 +1,11 @@
 import { useState } from "react"
 import { ChevronRightIcon, CopyMinusIcon, FilePlusCornerIcon, FolderPlusIcon } from "lucide-react"
+import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useEditor } from "@/features/editor/hooks/use-editor"
 
 import { useProject } from "../../hooks/use-projects"
 import { Id } from "../../../../../convex/_generated/dataModel"
@@ -33,43 +35,59 @@ export const FileExplorer = ({
     enabled: isOpen,
   });
 
+  const { openFile } = useEditor(projectId);
   const createFile = useCreateFile();
   const createFolder = useCreateFolder();
-  const handleCreate = (name: string) => {
+
+  const handleCreate = async (name: string) => {
+    const createType = creating;
     setCreating(null);
 
-    if (creating === "file") {
-      createFile({
-        projectId,
-        name,
-        content: "",
-        parentId: undefined,
-      });
-    } else {
-      createFolder({
-        projectId,
-        name,
-        parentId: undefined,
-      });
+    // Validate against siblings in rootFiles to prevent duplicate creation
+    if (rootFiles) {
+      const exists = rootFiles.some(
+        (f) => f.name.toLowerCase() === name.toLowerCase() && f.type === createType
+      );
+      if (exists) {
+        toast.error(createType === "file" ? "File already exists" : "Folder already exists");
+        return;
+      }
+    }
+
+    try {
+      if (createType === "file") {
+        const fileId = await createFile({
+          projectId,
+          name,
+          content: "",
+          parentId: undefined,
+        });
+        if (fileId) {
+          openFile(fileId, { pinned: false });
+        }
+      } else if (createType === "folder") {
+        await createFolder({
+          projectId,
+          name,
+          parentId: undefined,
+        });
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err) || "Failed to create";
+      toast.error(message);
     }
   };
 
   return (
     <div className="h-full bg-background flex flex-col">
       <div className="p-2 shrink-0 border-b border-border/40">
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={() => setIsOpen((value) => !value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              setIsOpen((value) => !value);
-            }
-          }}
-          className="group/project relative cursor-pointer w-full text-left flex items-center justify-between px-2 h-10 bg-muted/40 hover:bg-muted/60 transition-colors rounded-lg border border-border/50"
-        >
-          <div className="flex items-center gap-1.5 overflow-hidden">
+        <div className="group/project relative w-full text-left flex items-center justify-between px-2 h-10 bg-muted/40 hover:bg-muted/60 transition-colors rounded-lg border border-border/50">
+          <button
+            type="button"
+            aria-expanded={isOpen}
+            onClick={() => setIsOpen((value) => !value)}
+            className="flex items-center gap-1.5 overflow-hidden flex-1 text-left min-w-0 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded py-1"
+          >
             <ChevronRightIcon
               className={cn(
                 "size-4 shrink-0 text-muted-foreground transition-transform duration-200",
@@ -82,7 +100,7 @@ export const FileExplorer = ({
             >
               {project?.name ?? "Loading..."}
             </p>
-          </div>
+          </button>
           {/* From md up the actions overlay the name until hover/focus, so they take no width. */}
           <div className="opacity-100 md:opacity-0 group-hover/project:opacity-100 group-focus-within/project:opacity-100 focus-within:opacity-100 transition-opacity duration-200 flex items-center gap-0.5 shrink-0 md:absolute md:right-1.5 md:top-1/2 md:-translate-y-1/2 md:rounded-md md:bg-[color-mix(in_oklab,var(--muted)_60%,var(--background))]">
             <Button
