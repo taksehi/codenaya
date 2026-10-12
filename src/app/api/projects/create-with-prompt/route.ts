@@ -1,12 +1,7 @@
 import { z } from "zod";
 import { NextResponse } from "next/server";
 import { requireUserId } from "@/features/auth/server/require-user-id";
-import {
-  adjectives,
-  animals,
-  colors,
-  uniqueNamesGenerator,
-} from "unique-names-generator";
+import { generateProjectName } from "@/lib/project-names";
 
 import { DEFAULT_CONVERSATION_TITLE } from "@/features/conversations/constants";
 import {
@@ -77,13 +72,7 @@ export async function POST(request: Request) {
   }
 
   // Name it after its template, or generate a random name
-  const projectName =
-    template?.id ??
-    uniqueNamesGenerator({
-      dictionaries: [adjectives, animals, colors],
-      separator: "-",
-      length: 3,
-    });
+  const projectName = template?.id ?? generateProjectName();
 
   // Create project and conversation together
   const { projectId, conversationId } = await convex.mutation(
