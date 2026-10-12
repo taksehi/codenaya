@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { NextResponse } from "next/server";
 import { requireUserId } from "@/features/auth/server/require-user-id";
+import { parseJsonBody } from "@/lib/parse-json-body";
 import {
   adjectives,
   animals,
@@ -51,8 +52,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const body = await request.json();
-  const { prompt, model, templateId } = requestSchema.parse(body);
+  const parsed = await parseJsonBody(request, requestSchema);
+  if (!parsed.ok) {
+    return parsed.response;
+  }
+  const { prompt, model, templateId } = parsed.data;
   const template = templateId ? getStarterTemplate(templateId) : undefined;
 
   if (detectCredential(prompt).detected) {
