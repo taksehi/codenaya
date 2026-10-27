@@ -74,13 +74,6 @@ export const LandingHero = () => {
           animate={isInView ? "visible" : "hidden"}
           className="space-y-8"
         >
-          {/* Badge */}
-          <motion.div variants={fadeUp} className="flex justify-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/60 bg-card/50 backdrop-blur-sm text-xs font-medium text-muted-foreground">
-              <span className="size-1.5 rounded-full bg-brand animate-pulse" />
-              AI-Powered Browser IDE
-            </div>
-          </motion.div>
 
           {/* Headline */}
           <div className="space-y-2">
